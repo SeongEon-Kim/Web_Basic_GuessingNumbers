@@ -37,7 +37,6 @@ body {
 
 }
 
-
 #win_img {
     position: fixed;
     top: 30%;
@@ -58,7 +57,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 
 /* 이건 크롬 */
 @media (max-width: 1740px) {
@@ -104,6 +102,7 @@ body {
     }
 } */
 
+/* 이건 추가 당구공 */
 #ball {
     display: flex;
     justify-content: center;

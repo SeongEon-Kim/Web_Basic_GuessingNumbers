@@ -101,7 +101,7 @@ window.onload = function () {
 // 변수이름, enter! --> 코드를 깔끔하게! , 내가 오늘 이 코드를 처음 봤다했을 때 이해 가능한가? + 고객이 봤을 때 이 프로그램이 편한가?
 // innerHTML는 태그에 붙어서 작동한다.
 
-// 더 도전해보기,,. 이미지,.,.,
+// 이건 그냥 당구공
 var images = ["ball_1.png", "ball_2.png", "ball_3.png", "ball_4.png", "ball_5.png", "ball_6.png", "ball_7.png", "ball_8.png", "ball_9.png"];
 function random_ball() {
     // shuffle(images);
