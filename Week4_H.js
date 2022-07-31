@@ -1,10 +1,4 @@
-var cards = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 카드를 섞기 
-var answers = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 정답
-var pre_pos; // 출발 주소의 id
-var pre;  // 이전 정보(출발 정보)
-var aft; // 이후 정보(도착 정보)
-var tmp; // 값을 바꾸기 위한 tmp
-var ans = 0; // 맞춘 정답 개수
+var start_id;
 
 //shuffle라는 이름을 가진 함수는 배열을 인자로 받아서, 
 // Array.sort() 기능을 이용해 배열의 요소 순서를 변경합니다. 
@@ -17,9 +11,8 @@ function shuffle(cards) {
 
 // 이벤트 함수에 Event를 적어주는 이유는 Event가 없으면 갖다 쓸 수 있는 함수인 줄 알고 가져갈 수 있다.
 function dragStartEvent(event) {
-    pre_pos = event.target.id; // 이전 주소    
-    // e.target 대신에 this를 사용할 수도 있지만 추천하지는 않는다!
-    console.log(pre_pos)
+
+    start_id = event.target.id; // 이전 주소 // 출발 주소의 id // e.target 대신에 this를 사용할 수도 있지만 추천하지는 않는다!
 }
 
 function dragOverEvent() {
@@ -28,20 +21,24 @@ function dragOverEvent() {
 
 function dropEvent(event) {
 
-    pre = document.getElementById(pre_pos)   // 전역변수로 쓸 필요 X, 아이디 저장하지 말고 태그를 저장했어야,,!
-    aft = document.getElementById(event.target.id)
+    var start = document.getElementById(start_id)   // 이전 정보(출발 정보) // 전역변수로 쓸 필요 X, 아이디 저장하지 말고 태그를 저장했어야,,!
+    var destination = document.getElementById(event.target.id) // 이후 정보(도착 정보)
 
-    console.log(pre)
-    console.log(aft)
+    console.log(start)
+    console.log(destination)
 
-    tmp = pre.innerHTML   // 전역변수 쓸 필요 X
-    pre.innerHTML = aft.innerHTML
-    aft.innerHTML = tmp
+    var change_tmp = start.innerHTML   // 전역변수 쓸 필요 X
+    start.innerHTML = destination.innerHTML
+    destination.innerHTML = change_tmp
 }
 
 function answer_ball() {
+
+    var answers = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 정답
+    var ans = 0; // 맞춘 정답 개수
+
     for (var index = 9; index < 18; index++) {
-        console.log(answers[index - 9])
+
         if (document.getElementById(index).innerHTML == answers[index - 9]) {
             ans = ans + 1
         }
@@ -49,6 +46,7 @@ function answer_ball() {
             document.getElementById("lose").innerHTML = "다시 생각해보세요~~";
         }
     }
+
     if (ans == 9) {
         console.log("축하합니다 승리!")
         document.getElementById("win_img").style.display = "block";
@@ -60,46 +58,45 @@ function answer_ball() {
 window.onload = function () {
 
     var boxList = null;   // 협업, 변수는 가장 위에 선언
+    var cards = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 카드를 섞기 
 
-    for (var index = 0; index < cards.length; index++) {
+    boxList = document.getElementsByClassName("box")
+    console.log(boxList)
+    shuffle(cards);
+
+    for (var index = 0; index < 2 * cards.length; index++) {
         var tmpDiv = document.createElement("div")   // div라는 태그를 생성한다 
 
-        tmpDiv.className = "box"  // 생성한 태그(div)에 divs라는 클래스를 적용한다.
+        tmpDiv.className = "box"  // 생성한 태그(div)에 box라는 클래스를 적용한다.
         tmpDiv.draggable = true;
         tmpDiv.id = index;
 
-        tmpDiv.addEventListener("dragstart", function (event) { dragStartEvent(event) })
         // function을 tmpDiv의 EventListener로 add
         //--> 각각의 요소들이 이벤트를 발생했을 때 어느 타겟에서 발생한 것인지를 모른다!
         //--> event.target.id를 통해 각각의 요소들이 갖고있는 id값을 알 수 있다.
-        tmpDiv.addEventListener("dragover", function (event) { dragOverEvent(event) })
-        tmpDiv.addEventListener("drop", function (event) { dropEvent(event) })
-
-        document.getElementById("card").appendChild(tmpDiv) // div라는 태그를 box의 자식으로 한다.
-    }
-    // 중복코드!!!!!!!!!!!!!
-    for (var index = cards.length; index < 2 * cards.length; index++) {
-        var tmpDiv = document.createElement("div")   // div라는 태그를 생성한다 
-        tmpDiv.className = "box"
-        tmpDiv.draggable = true;
-        tmpDiv.id = index;
-
         tmpDiv.addEventListener("dragstart", function (event) { dragStartEvent(event) })
         tmpDiv.addEventListener("dragover", function (event) { dragOverEvent(event) })
         tmpDiv.addEventListener("drop", function (event) { dropEvent(event) })
 
-        document.getElementById("answer").appendChild(tmpDiv) // div라는 태그를 box의 자식으로 한다.
+        if (index < cards.length) {
+            document.getElementById("card").appendChild(tmpDiv) // div라는 태그를 answer의 자식으로 한다.
+            boxList[index].innerHTML = cards[index]
+            console.log(boxList)
+        }
+        else {
+            document.getElementById("answer").appendChild(tmpDiv) // div라는 태그를 answer의 자식으로 한다.
+        }
     }
+    // boxList = document.getElementsByClassName("box")
+    // shuffle(cards);
 
-    boxList = document.getElementsByClassName("box")
-    shuffle(cards);
+    // for (var index = 0; index < cards.length; index++) {
+    //     boxList[index].innerHTML = cards[index]
+    // }
 
-    for (var index = 0; index < cards.length; index++) {
-        boxList[index].innerHTML = cards[index]
-    }
-
-    console.log(cards)
+    // console.log(cards)
 }
+
 
 // 변수이름, enter! --> 코드를 깔끔하게! , 내가 오늘 이 코드를 처음 봤다했을 때 이해 가능한가? + 고객이 봤을 때 이 프로그램이 편한가?
 // innerHTML는 태그에 붙어서 작동한다.
